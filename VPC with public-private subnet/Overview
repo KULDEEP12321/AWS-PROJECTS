@@ -2,3 +2,4 @@ The VPC has public subnets and private subnets in two AVailability Zones.
 Each public subnet contains a NAT Gateway and a Load Balancer node.
 The server run in the private subnets, are launched and terminated by using an Auto Scaling Group,and receive traffic from Load Balancer.
 The server can connect to the Internet by using the NAT Gateway.
+VPC with public-private subnet/public private subnet.png
