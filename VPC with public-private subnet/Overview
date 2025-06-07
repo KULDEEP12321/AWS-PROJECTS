@@ -1,4 +1,82 @@
-The VPC has public subnets and private subnets in two AVailability Zones.
-Each public subnet contains a NAT Gateway and a Load Balancer node.
-The server run in the private subnets, are launched and terminated by using an Auto Scaling Group,and receive traffic from Load Balancer.
-The server can connect to the Internet by using the NAT Gateway.
+# 🌐 AWS VPC with Multi-AZ Public & Private Subnets, ALB, NAT, and Auto Scaling
+
+This project sets up a fault-tolerant and highly available AWS VPC architecture using multiple Availability Zones. It includes public and private subnets, NAT gateways, an application load balancer (ALB), auto scaling, and integration with S3 through a gateway endpoint.
+
+---
+
+## 🧱 Architecture Overview
+
+![VPC Architecture](./Screenshot%202025-06-08%20050647.png)
+
+### Components
+
+- **VPC** with multiple subnets across **two Availability Zones**
+- **Public Subnets**: Host NAT gateways and the **Application Load Balancer**
+- **Private Subnets**: Host **EC2 instances** managed by an **Auto Scaling Group**
+- **NAT Gateways**: Allow private instances to access the internet
+- **Application Load Balancer (ALB)**: Distributes traffic to EC2 instances
+- **S3 Gateway Endpoint**: Private access to S3 without using the internet
+- **Security Groups**: Control traffic to and from EC2 and ALB
+
+---
+
+## 🚀 Steps to Deploy Manually (AWS Console)
+
+1. **Create VPC**
+   - CIDR block: `10.0.0.0/16`
+
+2. **Create Subnets**
+   - Two **public subnets** (e.g., `10.0.1.0/24`, `10.0.2.0/24`)
+   - Two **private subnets** (e.g., `10.0.3.0/24`, `10.0.4.0/24`)
+   - Ensure each subnet is in a different **Availability Zone**
+
+3. **Internet Gateway**
+   - Attach to the VPC
+   - Route public subnets to it
+
+4. **NAT Gateways**
+   - Deploy one in each public subnet
+   - Allocate Elastic IPs
+   - Route private subnets through respective NATs
+
+5. **Route Tables**
+   - Public: Routes `0.0.0.0/0` → Internet Gateway
+   - Private: Routes `0.0.0.0/0` → NAT Gateway
+
+6. **S3 Gateway Endpoint**
+   - Create an endpoint for S3
+   - Associate with private route tables
+
+7. **Security Groups**
+   - ALB: Allow HTTP/HTTPS inbound
+   - EC2: Allow traffic only from ALB SG
+
+8. **Application Load Balancer**
+   - Target Group: EC2 instances
+   - Listener: Forward HTTP/HTTPS requests
+
+9. **Auto Scaling Group**
+   - Launch EC2 in private subnets
+   - Use target group of ALB for health checks
+
+---
+
+## 🧪 Use Case
+
+- Highly available 2-tier architecture
+- Secure backend with internet access only via NAT
+- Scalable and cost-efficient
+- S3 access without exposing traffic to the internet
+
+---
+
+## ⚙️ Optional: Terraform/CloudFormation
+
+You can automate this setup using **Terraform** or **AWS CloudFormation** for repeatable and version-controlled infrastructure deployments.
+
+---
+
+## 👨‍💻 Author
+
+**Kuldeep Shahi**  
+B.Tech in CSE | DevOps & Java Full Stack | AWS Learner
