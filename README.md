@@ -14,4 +14,10 @@ This project demonstrates how to create an Amazon VPC with public and private su
 - **Route Tables** - Configured for correct routing between subnets and gateways
 
 ## 🌐 Architecture Diagram
-
+VPC (10.0.0.0/16)
+├── Public Subnet (10.0.1.0/24)
+│ ├── EC2 Web Server
+│ └── Internet Gateway
+├── Private Subnet (10.0.2.0/24)
+│ ├── EC2 DB Server
+│ └── NAT Gateway
